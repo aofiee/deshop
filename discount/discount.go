@@ -198,6 +198,7 @@ func GetDiscountGameFrom(country int) []byte {
 		return nil
 	}
 	body, err := ioutil.ReadAll(data.Body)
+	data.Body.Close()
 	if err != nil {
 		return nil
 	}
@@ -240,6 +241,7 @@ func getPriceWithCountryAndGameID(code string, gameID int) Prices {
 		return Prices{}
 	}
 	body, err := ioutil.ReadAll(data.Body)
+	data.Body.Close()
 	if err != nil {
 		return Prices{}
 	}
