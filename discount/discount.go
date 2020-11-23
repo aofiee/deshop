@@ -9,77 +9,41 @@ import (
 	"strings"
 )
 
-//Country List const iota
-const (
-	JP = iota
-	US
-	GB
-	CA
-	AU
-	NZ
-	CZ
-	DK
-	FI
-	GR
-	HU
-	NO
-	PL
-	ZA
-	SE
-	DE
-	CH
-	FR
-	BEFR
-	IT
-	NL
-	BENL
-	RU
-	ES
-	MX
-	CO
-	AR
-	CL
-	PE
-	PT
-	BR
-	HK
-	KR
-)
-
-var api = []string{
-	"https://ec.nintendo.com/api/JP/ja/search/sales?count=30&offset=0",
-	"https://ec.nintendo.com/api/US/en/search/sales?count=30&offset=0",
-	"https://ec.nintendo.com/api/GB/en/search/sales?count=10&offset=0",
-	"https://ec.nintendo.com/api/CA/en/search/sales?count=30&offset=0#Canada",
-	"https://ec.nintendo.com/api/AU/en/search/sales?count=10&offset=0#Australia",
-	"https://ec.nintendo.com/api/NZ/en/search/sales?count=10&offset=0#NewZealand",
-	"https://ec.nintendo.com/api/CZ/en/search/sales?count=10&offset=0#Czech",
-	"https://ec.nintendo.com/api/DK/en/search/sales?count=10&offset=0#Denmark",
-	"https://ec.nintendo.com/api/FI/en/search/sales?count=10&offset=0#Finland",
-	"https://ec.nintendo.com/api/GR/en/search/sales?count=10&offset=0#Greece",
-	"https://ec.nintendo.com/api/HU/en/search/sales?count=10&offset=0#Hungary",
-	"https://ec.nintendo.com/api/NO/en/search/sales?count=10&offset=0#Norway",
-	"https://ec.nintendo.com/api/PL/en/search/sales?count=10&offset=0#Poland",
-	"https://ec.nintendo.com/api/ZA/en/search/sales?count=10&offset=0#SouthAfrica",
-	"https://ec.nintendo.com/api/SE/en/search/sales?count=10&offset=0#Sweden",
-	"https://ec.nintendo.com/api/DE/de/search/sales?count=10&offset=0",
-	"https://ec.nintendo.com/api/CH/de/search/sales?count=10&offset=0#Switzerland",
-	"https://ec.nintendo.com/api/FR/fr/search/sales?count=10&offset=0",
-	"https://ec.nintendo.com/api/BE/fr/search/sales?count=10&offset=0#Belgium",
-	"https://ec.nintendo.com/api/IT/it/search/sales?count=10&offset=0",
-	"https://ec.nintendo.com/api/NL/nl/search/sales?count=10&offset=0",
-	"https://ec.nintendo.com/api/BE/nl/search/sales?count=10&offset=0#Belgium",
-	"https://ec.nintendo.com/api/RU/ru/search/sales?count=30&offset=0",
-	"https://ec.nintendo.com/api/ES/es/search/sales?count=30&offset=0",
-	"https://ec.nintendo.com/api/MX/es/search/sales?count=30&offset=0#Mexico",
-	"https://ec.nintendo.com/api/CO/es/search/sales?count=10&offset=0#Columbia",
-	"https://ec.nintendo.com/api/AR/es/search/sales?count=10&offset=0#Argentina",
-	"https://ec.nintendo.com/api/CL/es/search/sales?count=10&offset=0#Chile",
-	"https://ec.nintendo.com/api/PE/es/search/sales?count=10&offset=0#Peru",
-	"https://ec.nintendo.com/api/PT/pt/search/sales?count=30&offset=0",
-	"https://ec.nintendo.com/api/BR/pt/search/sales?count=10&offset=0",
-	"https://ec.nintendo.com/api/HK/zh/search/sales?count=10&offset=0",
-	"https://ec.nintendo.com/api/KR/ko/search/sales?count=10&offset=0",
+//API map[string]string
+var API = map[string]string{
+	"JP":    "https://ec.nintendo.com/api/JP/ja/search/sales?count=30&offset=0",
+	"US":    "https://ec.nintendo.com/api/US/en/search/sales?count=30&offset=0",
+	"GB":    "https://ec.nintendo.com/api/GB/en/search/sales?count=10&offset=0",
+	"CA":    "https://ec.nintendo.com/api/CA/en/search/sales?count=30&offset=0#Canada",
+	"AU":    "https://ec.nintendo.com/api/AU/en/search/sales?count=10&offset=0#Australia",
+	"NZ":    "https://ec.nintendo.com/api/NZ/en/search/sales?count=10&offset=0#NewZealand",
+	"CZ":    "https://ec.nintendo.com/api/CZ/en/search/sales?count=10&offset=0#Czech",
+	"DK":    "https://ec.nintendo.com/api/DK/en/search/sales?count=10&offset=0#Denmark",
+	"FI":    "https://ec.nintendo.com/api/FI/en/search/sales?count=10&offset=0#Finland",
+	"GR":    "https://ec.nintendo.com/api/GR/en/search/sales?count=10&offset=0#Greece",
+	"HU":    "https://ec.nintendo.com/api/HU/en/search/sales?count=10&offset=0#Hungary",
+	"NO":    "https://ec.nintendo.com/api/NO/en/search/sales?count=10&offset=0#Norway",
+	"PL":    "https://ec.nintendo.com/api/PL/en/search/sales?count=10&offset=0#Poland",
+	"ZA":    "https://ec.nintendo.com/api/ZA/en/search/sales?count=10&offset=0#SouthAfrica",
+	"SE":    "https://ec.nintendo.com/api/SE/en/search/sales?count=10&offset=0#Sweden",
+	"DE":    "https://ec.nintendo.com/api/DE/de/search/sales?count=10&offset=0",
+	"CH":    "https://ec.nintendo.com/api/CH/de/search/sales?count=10&offset=0#Switzerland",
+	"FR":    "https://ec.nintendo.com/api/FR/fr/search/sales?count=10&offset=0",
+	"BE-fr": "https://ec.nintendo.com/api/BE/fr/search/sales?count=10&offset=0#Belgium",
+	"IT":    "https://ec.nintendo.com/api/IT/it/search/sales?count=10&offset=0",
+	"NL":    "https://ec.nintendo.com/api/NL/nl/search/sales?count=10&offset=0",
+	"BE-nl": "https://ec.nintendo.com/api/BE/nl/search/sales?count=10&offset=0#Belgium",
+	"RU":    "https://ec.nintendo.com/api/RU/ru/search/sales?count=30&offset=0",
+	"ES":    "https://ec.nintendo.com/api/ES/es/search/sales?count=30&offset=0",
+	"MX":    "https://ec.nintendo.com/api/MX/es/search/sales?count=30&offset=0#Mexico",
+	"CO":    "https://ec.nintendo.com/api/CO/es/search/sales?count=10&offset=0#Columbia",
+	"AR":    "https://ec.nintendo.com/api/AR/es/search/sales?count=10&offset=0#Argentina",
+	"CL":    "https://ec.nintendo.com/api/CL/es/search/sales?count=10&offset=0#Chile",
+	"PE":    "https://ec.nintendo.com/api/PE/es/search/sales?count=10&offset=0#Peru",
+	"PT":    "https://ec.nintendo.com/api/PT/pt/search/sales?count=30&offset=0",
+	"BR":    "https://ec.nintendo.com/api/BR/pt/search/sales?count=10&offset=0",
+	"HK":    "https://ec.nintendo.com/api/HK/zh/search/sales?count=10&offset=0",
+	"KR":    "https://ec.nintendo.com/api/KR/ko/search/sales?count=10&offset=0",
 }
 
 //Contents struct
@@ -189,8 +153,8 @@ type Discount struct {
 }
 
 //GetDiscountGameFrom func
-func GetDiscountGameFrom(country int) []byte {
-	data, err := http.Get(api[country])
+func GetDiscountGameFrom(api string) []byte {
+	data, err := http.Get(api)
 	if err != nil {
 		return nil
 	}
@@ -206,7 +170,7 @@ func GetDiscountGameFrom(country int) []byte {
 	json.Unmarshal([]byte(body), &contents)
 	gameList := []GameDiscount{}
 
-	u, _ := url.Parse(api[country])
+	u, _ := url.Parse(api)
 	countryCode := parserURL(u)
 
 	for _, game := range contents.Contents {
